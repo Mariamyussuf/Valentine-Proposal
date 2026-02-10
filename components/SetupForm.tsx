@@ -117,7 +117,10 @@ const SetupForm: React.FC<SetupFormProps> = ({ onSubmit, isLoading }) => {
             <div className="sm:col-span-2 md:col-span-2">
                  <label className="block text-[8px] sm:text-[10px] uppercase tracking-widest text-slate-400 mb-1.5 sm:mb-2 ml-1">Gender</label>
                  <select 
-                    className="w-full bg-black/20 border border-white/10 rounded-lg p-2.5 sm:p-3 text-sm sm:text-base text-white focus:outline-none focus:border-rose-500/50 focus:bg-white/5 transition-colors"
+                    className="w-full bg-slate-900/60 border border-white/10 rounded-lg p-2.5 sm:p-3 text-sm sm:text-base text-slate-300 focus:outline-none focus:border-rose-500/50 focus:bg-slate-900/80 transition-colors"
+                    style={{
+                      colorScheme: 'dark'
+                    }}
                     value={formData.partnerGender}
                     onChange={(e) => {
                         handleInteraction();
