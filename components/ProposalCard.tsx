@@ -55,15 +55,21 @@ const ProposalCard: React.FC<ProposalCardProps> = ({ content, onYes, isRecipient
     setShorteningLoading(true);
     try {
       const longUrl = getShareUrl();
-      const response = await fetch(`https://tinyurl.com/api/create.php?url=${encodeURIComponent(longUrl)}`);
-      const shortUrl = await response.text();
+      // Use is.gd API which is more reliable and has better CORS support
+      const response = await fetch(`https://is.gd/create.php?format=json&url=${encodeURIComponent(longUrl)}`);
       
-      if (shortUrl && !shortUrl.includes('error')) {
-        navigator.clipboard.writeText('https://tinyurl.com/' + shortUrl);
+      if (!response.ok) {
+        throw new Error('API request failed');
+      }
+      
+      const data = await response.json();
+      
+      if (data.shorturl) {
+        navigator.clipboard.writeText(data.shorturl);
         setShortened(true);
         setTimeout(() => setShortened(false), 2000);
       } else {
-        throw new Error('Failed to shorten URL');
+        throw new Error('No short URL returned');
       }
     } catch (error) {
       console.error('URL shortening failed:', error);
