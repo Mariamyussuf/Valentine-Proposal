@@ -99,7 +99,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="relative w-full h-screen overflow-hidden flex items-center justify-center bg-[#020617]">
+    <div className="relative w-full h-screen overflow-hidden flex items-center justify-center bg-[#020617] max-h-[100dvh]">
       <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-[#0a0a1a] to-black opacity-80 z-0 pointer-events-none" />
 
       {/* 3D Background */}
@@ -116,7 +116,7 @@ const App: React.FC = () => {
       )}
 
       {/* Content Layer */}
-      <main className="z-10 w-full h-full flex items-center justify-center p-3 sm:p-4 md:p-6 overflow-y-auto">
+      <main className="z-10 w-full h-full flex items-center justify-center p-3 sm:p-4 md:p-6 overflow-y-auto overflow-x-hidden">
         
         {stage === AppStage.SETUP && (
           <SetupForm onSubmit={handleSetupSubmit} isLoading={loading} />
@@ -146,7 +146,7 @@ const App: React.FC = () => {
                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-rose-500 to-transparent opacity-50"></div>
                  
                  {/* Main Success Declaration */}
-                 <h1 className="text-2xl sm:text-4xl md:text-6xl font-serif italic text-transparent bg-clip-text bg-gradient-to-b from-white to-rose-200 drop-shadow-[0_0_40px_rgba(225,29,72,0.4)] pb-2 sm:pb-4 mb-2">
+                 <h1 className="text-2xl sm:text-4xl md:text-6xl font-serif italic text-transparent bg-clip-text bg-gradient-to-b from-white to-rose-200 drop-shadow-[0_0_40px_rgba(225,29,72,0.4)] pb-2 sm:pb-4 mb-2 px-2">
                    {getSuccessHeader()}
                  </h1>
                  
@@ -159,11 +159,11 @@ const App: React.FC = () => {
 
                  {/* The Personal Note */}
                  <div className="relative">
-                    <Sparkles className="absolute -top-4 -left-2 text-rose-300/30" size={16} />
+                    <Sparkles className="absolute -top-4 -left-2 text-rose-300/30 hidden sm:block" size={16} />
                     <p className="text-base sm:text-lg md:text-2xl text-slate-200 leading-relaxed font-serif font-light italic px-2 sm:px-4 md:px-4">
                        "{generatedContent?.personalNote || generatedContent?.poem || "Love Wins."}"
                     </p>
-                    <Sparkles className="absolute -bottom-4 -right-2 text-rose-300/30" size={16} />
+                    <Sparkles className="absolute -bottom-4 -right-2 text-rose-300/30 hidden sm:block" size={16} />
                  </div>
 
                  <div className="mt-6 sm:mt-8 md:mt-10 pt-4 sm:pt-6 border-t border-white/5">
@@ -174,11 +174,11 @@ const App: React.FC = () => {
              </div>
 
              {/* Action Buttons */}
-             <div className="flex flex-col gap-3 sm:gap-4 w-full justify-center px-2 sm:px-4">
+             <div className="flex flex-col gap-3 sm:gap-4 w-full justify-center px-2 sm:px-4 max-w-full">
                  {isRecipient && (
                     <button
                         onClick={notifySender}
-                        className="flex items-center justify-center gap-2 bg-white text-rose-900 px-4 sm:px-6 py-2.5 sm:py-3 rounded-full font-serif italic text-base sm:text-lg shadow-[0_0_25px_rgba(255,255,255,0.4)] hover:scale-105 transition-transform w-full active:scale-95"
+                        className="flex items-center justify-center gap-2 bg-white text-rose-900 px-4 sm:px-6 py-3 sm:py-4 rounded-full font-serif italic text-base sm:text-lg shadow-[0_0_25px_rgba(255,255,255,0.4)] hover:scale-105 active:scale-95 transition-transform w-full"
                     >
                         <MessageCircle size={18} className="sm:w-5 sm:h-5" />
                         Tell {generatedContent?.senderName || "them"} YES!
@@ -187,7 +187,7 @@ const App: React.FC = () => {
                  
                  <button
                     onClick={handleDownload}
-                    className="flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-white border border-white/20 px-4 sm:px-6 py-2.5 sm:py-3 rounded-full font-sans text-xs sm:text-sm tracking-wide uppercase transition-all backdrop-blur-sm w-full active:scale-95"
+                    className="flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-white border border-white/20 px-4 sm:px-6 py-3 sm:py-4 rounded-full font-sans text-xs sm:text-sm tracking-wide uppercase transition-all backdrop-blur-sm w-full active:scale-95"
                  >
                     <Camera size={16} className="sm:w-[18px] sm:h-[18px]" />
                     Save Memory

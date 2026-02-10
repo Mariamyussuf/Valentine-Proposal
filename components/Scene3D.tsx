@@ -179,7 +179,11 @@ const ResponsiveCamera = () => {
    useEffect(() => {
      const handleResize = () => {
         // Increase distance on smaller screens (mobile) to keep scene in view
-        camera.position.z = window.innerWidth < 768 ? 14 : 8;
+        const isMobile = window.innerWidth < 768;
+        camera.position.z = isMobile ? 15 : 8;
+        if ('fov' in camera) {
+          (camera as any).fov = isMobile ? 75 : 60;
+        }
         camera.updateProjectionMatrix();
      };
      window.addEventListener('resize', handleResize);
@@ -197,8 +201,8 @@ interface Scene3DProps {
 
 const Scene3D: React.FC<Scene3DProps> = ({ intensity, isSuccess }) => {
   return (
-    <div className="absolute inset-0 z-0">
-      <Canvas camera={{ position: [0, 0, 8], fov: 60 }} gl={{ antialias: true }}>
+    <div className="absolute inset-0 z-0 touch-none">
+      <Canvas camera={{ position: [0, 0, 8], fov: 60 }} gl={{ antialias: true, pixelRatio: window.devicePixelRatio > 2 ? 2 : 1 }}>
         <ResponsiveCamera />
         {/* Deep space fog */}
         <color attach="background" args={['#020617']} />
