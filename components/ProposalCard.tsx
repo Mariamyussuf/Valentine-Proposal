@@ -107,11 +107,11 @@ const ProposalCard: React.FC<ProposalCardProps> = ({ content, onYes, isRecipient
   };
 
   return (
-    <div className="relative w-full max-w-2xl z-20 flex flex-col items-center">
+    <div className="relative w-full max-w-2xl z-20 flex flex-col items-center px-3 sm:px-0 my-auto">
       
       {/* Floating Heart Badge - Responsive positioning */}
-      <div className="absolute -top-8 md:-top-10 left-1/2 transform -translate-x-1/2 z-30 pointer-events-none">
-        <div className="relative hover:scale-105 transition-transform duration-500 scale-75 md:scale-100">
+      <div className="absolute -top-6 sm:-top-8 md:-top-10 left-1/2 transform -translate-x-1/2 z-30 pointer-events-none">
+        <div className="relative hover:scale-105 transition-transform duration-500 scale-50 sm:scale-75 md:scale-100">
             <div className="absolute inset-0 bg-rose-500/40 blur-2xl opacity-50 rounded-full"></div>
             <Heart className="text-rose-600 relative z-10 drop-shadow-xl" size={70} fill="#e11d48" strokeWidth={1} />
         </div>
@@ -120,51 +120,51 @@ const ProposalCard: React.FC<ProposalCardProps> = ({ content, onYes, isRecipient
       <div 
         ref={containerRef} 
         onClick={handleInteraction} 
-        className="w-full p-6 pt-14 md:p-10 md:pt-16 glass-panel rounded-lg border border-white/10 text-center flex flex-col items-center shadow-2xl max-h-[85vh] overflow-y-auto custom-scrollbar bg-black/40 relative group"
+        className="w-full p-4 pt-10 sm:p-6 sm:pt-14 md:p-10 md:pt-16 glass-panel rounded-lg sm:rounded-xl md:rounded-lg border border-white/10 text-center flex flex-col items-center shadow-2xl max-h-[85vh] overflow-y-auto custom-scrollbar bg-black/40 relative group"
       >
         {/* Download Button */}
         <button 
             onClick={handleDownload}
-            className="absolute top-4 right-4 p-2 text-white/20 hover:text-white/80 hover:bg-white/10 rounded-full transition-all opacity-100 md:opacity-0 md:group-hover:opacity-100"
+            className="absolute top-3 right-3 sm:top-4 sm:right-4 p-2 text-white/20 hover:text-white/80 hover:bg-white/10 rounded-full transition-all opacity-100 md:opacity-0 md:group-hover:opacity-100"
             title="Save as Image"
         >
-            <Camera size={18} />
+            <Camera size={16} className="sm:w-[18px] sm:h-[18px]" />
         </button>
 
-        <h2 className="text-3xl md:text-5xl font-serif italic text-white mb-6 md:mb-8 leading-tight">
+        <h2 className="text-2xl sm:text-3xl md:text-5xl font-serif italic text-white mb-4 sm:mb-6 md:mb-8 leading-tight px-2">
           {content.headline}
         </h2>
 
         {/* AI Generated Poem */}
-        <div className="mb-8 md:mb-10 w-full px-2 md:px-4">
-          <p className="text-base md:text-xl text-slate-200 leading-loose font-serif font-light">
+        <div className="mb-6 sm:mb-8 md:mb-10 w-full px-2 sm:px-3 md:px-4">
+          <p className="text-sm sm:text-base md:text-xl text-slate-200 leading-loose font-serif font-light">
             {content.poem}
           </p>
         </div>
 
         {/* Manual Love Note */}
         {content.personalNote && (
-          <div className="relative w-full mb-8 md:mb-10 transform -rotate-1 hover:rotate-0 transition-transform duration-500">
-              <div className="bg-[#fff1f2] p-4 md:p-6 rounded-sm shadow-xl text-slate-800 text-left relative overflow-hidden">
+          <div className="relative w-full mb-6 sm:mb-8 md:mb-10 px-2 transform -rotate-1 hover:rotate-0 transition-transform duration-500">
+              <div className="bg-[#fff1f2] p-3 sm:p-4 md:p-6 rounded-sm shadow-xl text-slate-800 text-left relative overflow-hidden">
                   <div className="absolute top-0 left-0 w-full h-1 bg-rose-900/10"></div>
-                  <p className="font-serif italic text-lg md:text-xl leading-relaxed text-slate-800">
+                  <p className="font-serif italic text-base sm:text-lg md:text-xl leading-relaxed text-slate-800">
                       "{content.personalNote}"
                   </p>
               </div>
           </div>
         )}
 
-        <div className="w-16 h-px bg-white/20 mb-6 md:mb-8"></div>
+        <div className="w-12 sm:w-16 h-px bg-white/20 mb-4 sm:mb-6 md:mb-8"></div>
 
-        <h3 className="text-xs md:text-sm font-sans tracking-[0.3em] uppercase text-slate-400 mb-6 md:mb-8">
+        <h3 className="text-[9px] sm:text-xs md:text-sm font-sans tracking-[0.2em] sm:tracking-[0.3em] uppercase text-slate-400 mb-4 sm:mb-6 md:mb-8 px-2">
           The Question
         </h3>
 
-        <div className="flex flex-col md:flex-row gap-4 md:gap-6 items-center justify-center w-full relative min-h-[5rem] mb-6 shrink-0">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 items-center justify-center w-full relative min-h-[3rem] sm:min-h-[5rem] mb-4 sm:mb-6 shrink-0 px-2">
           <button
             onClick={handleYesClick}
             onMouseEnter={() => audio.playHover()}
-            className="bg-white text-black hover:bg-rose-50 font-serif italic text-lg md:text-xl px-8 md:px-12 py-3 rounded-full shadow-[0_0_30px_rgba(255,255,255,0.2)] transition-all transform hover:scale-105 active:scale-95 z-10 border border-transparent hover:border-rose-200 w-full md:w-auto"
+            className="bg-white text-black hover:bg-rose-50 font-serif italic text-base sm:text-lg md:text-xl px-6 sm:px-8 md:px-12 py-2.5 sm:py-3 rounded-full shadow-[0_0_30px_rgba(255,255,255,0.2)] transition-all transform hover:scale-105 active:scale-95 z-10 border border-transparent hover:border-rose-200 w-full sm:w-auto"
           >
             Yes, I will
           </button>
@@ -177,7 +177,7 @@ const ProposalCard: React.FC<ProposalCardProps> = ({ content, onYes, isRecipient
               transform: `translate(${noBtnPosition.x}px, ${noBtnPosition.y}px)`,
               transition: 'transform 0.2s cubic-bezier(0.1, 0.7, 1.0, 0.1)'
             }}
-            className="text-slate-500 font-sans uppercase tracking-widest text-xs py-3 px-6 md:py-4 md:px-8 rounded-full border border-white/5 hover:bg-white/5 transition-colors whitespace-nowrap"
+            className="text-slate-500 font-sans uppercase tracking-widest text-[10px] sm:text-xs py-2.5 sm:py-3 md:py-4 px-4 sm:px-6 md:px-8 rounded-full border border-white/5 hover:bg-white/5 transition-colors whitespace-nowrap"
           >
             {isHoveringNo ? "Not an option" : "No"}
           </button>
@@ -185,47 +185,47 @@ const ProposalCard: React.FC<ProposalCardProps> = ({ content, onYes, isRecipient
 
         {/* Share Section - Only visible to Creator */}
         {!isRecipient && (
-          <div className="mt-8 pt-8 border-t border-white/5 w-full flex flex-col items-center gap-4 shrink-0">
-              <p className="text-[10px] text-slate-500 uppercase tracking-widest">Share this with them</p>
+          <div className="mt-6 sm:mt-8 pt-4 sm:pt-6 md:pt-8 border-t border-white/5 w-full flex flex-col items-center gap-3 sm:gap-4 shrink-0 px-2">
+              <p className="text-[8px] sm:text-[9px] md:text-[10px] text-slate-500 uppercase tracking-[0.2em] md:tracking-widest">Share this with them</p>
               
-              <div className="flex flex-wrap items-center justify-center gap-3">
+              <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
                 <button 
                     onClick={copyShareLink}
                     onMouseEnter={() => audio.playHover()}
-                    className="flex items-center gap-2 px-6 py-2 bg-white/5 hover:bg-white/10 text-white rounded-full transition-all border border-white/10 hover:border-white/20 group"
+                    className="flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 py-2 bg-white/5 hover:bg-white/10 text-white rounded-full transition-all border border-white/10 hover:border-white/20 group"
                 >
-                    {copied ? <Check size={14} className="text-green-400" /> : <LinkIcon size={14} className="group-hover:scale-110 transition-transform" />}
-                    <span className="font-sans text-xs tracking-wide">{copied ? "COPIED" : "COPY LINK"}</span>
+                    {copied ? <Check size={12} className="sm:w-[14px] sm:h-[14px] text-green-400" /> : <LinkIcon size={12} className="sm:w-[14px] sm:h-[14px] group-hover:scale-110 transition-transform" />}
+                    <span className="font-sans text-[9px] sm:text-xs tracking-[0.1em]">{copied ? "COPIED" : "COPY LINK"}</span>
                 </button>
 
-                <div className="w-px h-6 bg-white/10 mx-2 hidden md:block"></div>
+                <div className="w-px h-5 sm:h-6 bg-white/10 mx-1 sm:mx-2 hidden sm:block"></div>
 
-                <div className="flex gap-2">
+                <div className="flex gap-1.5 sm:gap-2">
                     <button 
                     onClick={() => shareToSocial('whatsapp')}
                     onMouseEnter={() => audio.playHover()}
-                    className="p-2 text-slate-400 hover:text-white transition-colors"
+                    className="p-1.5 sm:p-2 text-slate-400 hover:text-white transition-colors"
                     title="Share via WhatsApp"
                     >
-                    <MessageCircle size={18} />
+                    <MessageCircle size={14} className="sm:w-[18px] sm:h-[18px]" />
                     </button>
 
                     <button 
                     onClick={() => shareToSocial('twitter')}
                     onMouseEnter={() => audio.playHover()}
-                    className="p-2 text-slate-400 hover:text-white transition-colors"
+                    className="p-1.5 sm:p-2 text-slate-400 hover:text-white transition-colors"
                     title="Share on Twitter"
                     >
-                    <Twitter size={18} />
+                    <Twitter size={14} className="sm:w-[18px] sm:h-[18px]" />
                     </button>
 
                     <button 
                     onClick={() => shareToSocial('facebook')}
                     onMouseEnter={() => audio.playHover()}
-                    className="p-2 text-slate-400 hover:text-white transition-colors"
+                    className="p-1.5 sm:p-2 text-slate-400 hover:text-white transition-colors"
                     title="Share on Facebook"
                     >
-                    <Facebook size={18} />
+                    <Facebook size={14} className="sm:w-[18px] sm:h-[18px]" />
                     </button>
                 </div>
               </div>
