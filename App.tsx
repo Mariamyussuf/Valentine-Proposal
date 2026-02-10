@@ -77,8 +77,14 @@ const App: React.FC = () => {
     audio.playClick();
     
     try {
-      // Temporarily remove shadow and animation for cleaner capture
       const element = captureRef.current;
+      
+      // Temporarily fix gradient text for rendering
+      const header = element.querySelector('h1');
+      const originalClass = header?.className;
+      if (header) {
+        header.className = 'text-2xl sm:text-4xl md:text-6xl font-serif italic text-white pb-2 sm:pb-4 mb-2 px-2';
+      }
       
       const canvas = await html2canvas(element, {
         backgroundColor: '#020617', // Force dark background
@@ -86,6 +92,11 @@ const App: React.FC = () => {
         logging: false,
         useCORS: true,
       });
+
+      // Restore original styling
+      if (header && originalClass) {
+        header.className = originalClass;
+      }
 
       const image = canvas.toDataURL('image/png');
       const link = document.createElement('a');
