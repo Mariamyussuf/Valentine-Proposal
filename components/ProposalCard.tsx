@@ -15,6 +15,8 @@ const ProposalCard: React.FC<ProposalCardProps> = ({ content, onYes, isRecipient
   const containerRef = useRef<HTMLDivElement>(null);
   const [isHoveringNo, setIsHoveringNo] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [shortened, setShortened] = useState(false);
+  const [shorteningLoading, setShorteningLoading] = useState(false);
 
   // Start ambient music if Recipient opens the link and interacts
   const handleInteraction = () => {
@@ -46,6 +48,32 @@ const ProposalCard: React.FC<ProposalCardProps> = ({ content, onYes, isRecipient
     navigator.clipboard.writeText(getShareUrl());
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const shortenAndCopyLink = async () => {
+    audio.playClick();
+    setShorteningLoading(true);
+    try {
+      const longUrl = getShareUrl();
+      const response = await fetch(`https://tinyurl.com/api/create.php?url=${encodeURIComponent(longUrl)}`);
+      const shortUrl = await response.text();
+      
+      if (shortUrl && !shortUrl.includes('error')) {
+        navigator.clipboard.writeText('https://tinyurl.com/' + shortUrl);
+        setShortened(true);
+        setTimeout(() => setShortened(false), 2000);
+      } else {
+        throw new Error('Failed to shorten URL');
+      }
+    } catch (error) {
+      console.error('URL shortening failed:', error);
+      // Fallback: just copy the long URL
+      navigator.clipboard.writeText(getShareUrl());
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } finally {
+      setShorteningLoading(false);
+    }
   };
 
   const shareToSocial = (platform: 'whatsapp' | 'twitter' | 'facebook') => {
@@ -196,6 +224,16 @@ const ProposalCard: React.FC<ProposalCardProps> = ({ content, onYes, isRecipient
                 >
                     {copied ? <Check size={12} className="sm:w-[14px] sm:h-[14px] text-green-400" /> : <LinkIcon size={12} className="sm:w-[14px] sm:h-[14px] group-hover:scale-110 transition-transform" />}
                     <span className="font-sans tracking-[0.05em]">{copied ? "COPIED" : "COPY"}</span>
+                </button>
+
+                <button 
+                    onClick={shortenAndCopyLink}
+                    onMouseEnter={() => audio.playHover()}
+                    disabled={shorteningLoading}
+                    className="flex items-center gap-1 px-3 sm:px-4 py-1.5 sm:py-2 bg-white/5 hover:bg-white/10 text-white rounded-full transition-all border border-white/10 hover:border-white/20 group text-[8px] sm:text-xs disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    {shortened ? <Check size={12} className="sm:w-[14px] sm:h-[14px] text-green-400" /> : <LinkIcon size={12} className="sm:w-[14px] sm:h-[14px] group-hover:scale-110 transition-transform" />}
+                    <span className="font-sans tracking-[0.05em]">{shorteningLoading ? "SHORT..." : shortened ? "SHORT COPIED" : "SHORTEN"}</span>
                 </button>
 
                 <div className="w-px h-4 sm:h-5 bg-white/10 hidden sm:block"></div>
