@@ -66,10 +66,52 @@ const App: React.FC = () => {
     return "She Said YES";
   };
 
-  const notifySender = () => {
-    const text = "I said YES! ❤️";
-    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
-    window.open(whatsappUrl, '_blank');
+  const notifySender = async () => {
+    if (!captureRef.current) return;
+    audio.playClick();
+    
+    try {
+      const element = captureRef.current;
+      const canvas = await html2canvas(element, {
+        backgroundColor: '#020617',
+        scale: 2,
+        logging: false,
+        useCORS: true,
+      });
+
+      canvas.toBlob(async (blob) => {
+        if (!blob) return;
+        
+        const file = new File([blob], 'i-said-yes.png', { type: 'image/png' });
+        const shareUrl = `${window.location.origin}${window.location.pathname}?data=${btoa(encodeURIComponent(JSON.stringify(generatedContent)))}`;
+        
+        // Try native Web Share API first (works best on mobile)
+        if (navigator.share) {
+          try {
+            await navigator.share({
+              title: 'I said YES!',
+              text: 'I said YES! ❤️\n\nOpen this link to see the proposal:',
+              url: shareUrl,
+              files: [file]
+            });
+          } catch (error) {
+            // User cancelled share, that's ok
+            console.log('Share cancelled');
+          }
+        } else {
+          // Fallback for desktop: send to WhatsApp with text and link
+          const text = `I said YES! ❤️\n\n${shareUrl}`;
+          const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
+          window.open(whatsappUrl, '_blank');
+        }
+      });
+    } catch (error) {
+      console.error('Share failed:', error);
+      // Fallback: just open WhatsApp with text
+      const text = `I said YES! ❤️`;
+      const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
+      window.open(whatsappUrl, '_blank');
+    }
   };
 
   const handleDownload = async () => {
