@@ -13,6 +13,7 @@ const App: React.FC = () => {
   const [generatedContent, setGeneratedContent] = useState<GeneratedContent | null>(null);
   const [loading, setLoading] = useState(false);
   const [isRecipient, setIsRecipient] = useState(false);
+  const [replyMessage, setReplyMessage] = useState('');
   const captureRef = useRef<HTMLDivElement>(null);
 
   // Check for shared proposal in URL on mount
@@ -66,12 +67,32 @@ const App: React.FC = () => {
     return "She Said YES";
   };
 
+  const shortenUrl = async (url: string): Promise<string> => {
+    try {
+      const response = await fetch(`https://is.gd/create.php?format=json&url=${encodeURIComponent(url)}`);
+      if (!response.ok) throw new Error('Failed to shorten');
+      const data = await response.json();
+      return data.shorturl || url;
+    } catch (error) {
+      console.error('URL shortening failed:', error);
+      return url;
+    }
+  };
+
   const notifySender = async () => {
     if (!captureRef.current) return;
     audio.playClick();
     
     try {
       const element = captureRef.current;
+      
+      // Temporarily fix gradient text for rendering
+      const header = element.querySelector('h1');
+      const originalClass = header?.className;
+      if (header) {
+        header.className = 'text-2xl sm:text-4xl md:text-6xl font-serif italic text-white pb-2 sm:pb-4 mb-2 px-2';
+      }
+      
       const canvas = await html2canvas(element, {
         backgroundColor: '#020617',
         scale: 2,
@@ -79,19 +100,28 @@ const App: React.FC = () => {
         useCORS: true,
       });
 
+      // Restore original styling
+      if (header && originalClass) {
+        header.className = originalClass;
+      }
+
       canvas.toBlob(async (blob) => {
         if (!blob) return;
         
         const file = new File([blob], 'i-said-yes.png', { type: 'image/png' });
-        const shareUrl = `${window.location.origin}${window.location.pathname}?data=${btoa(encodeURIComponent(JSON.stringify(generatedContent)))}`;
+        const longUrl = `${window.location.origin}${window.location.pathname}?data=${btoa(encodeURIComponent(JSON.stringify(generatedContent)))}`;
+        const shortUrl = await shortenUrl(longUrl);
+        
+        const messageText = replyMessage ? `${replyMessage}\n\n` : '';
+        const confirmText = 'I said YES! ❤️';
         
         // Try native Web Share API first (works best on mobile)
         if (navigator.share) {
           try {
             await navigator.share({
               title: 'I said YES!',
-              text: 'I said YES! ❤️\n\nOpen this link to see the proposal:',
-              url: shareUrl,
+              text: `${messageText}${confirmText}`,
+              url: shortUrl,
               files: [file]
             });
           } catch (error) {
@@ -100,7 +130,7 @@ const App: React.FC = () => {
           }
         } else {
           // Fallback for desktop: send to WhatsApp with text and link
-          const text = `I said YES! ❤️\n\n${shareUrl}`;
+          const text = `${messageText}${confirmText}\n\n${shortUrl}`;
           const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
           window.open(whatsappUrl, '_blank');
         }
@@ -108,7 +138,7 @@ const App: React.FC = () => {
     } catch (error) {
       console.error('Share failed:', error);
       // Fallback: just open WhatsApp with text
-      const text = `I said YES! ❤️`;
+      const text = replyMessage ? `${replyMessage}\n\nI said YES! ❤️` : 'I said YES! ❤️';
       const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
       window.open(whatsappUrl, '_blank');
     }
@@ -225,6 +255,18 @@ const App: React.FC = () => {
                    </p>
                  </div>
              </div>
+
+             {/* Optional Reply Message - Only for Recipients */}
+             {isRecipient && (
+                <textarea
+                  placeholder="Say something back (optional)..."
+                  value={replyMessage}
+                  onChange={(e) => setReplyMessage(e.target.value)}
+                  maxLength={500}
+                  className="w-full bg-white/5 border border-white/10 rounded-lg p-3 sm:p-4 text-white focus:outline-none focus:border-rose-500/50 focus:bg-white/10 transition-colors resize-none placeholder-white/30 font-serif text-sm leading-relaxed mb-3 sm:mb-4"
+                  style={{ minHeight: '80px' }}
+                />
+             )}
 
              {/* Action Buttons */}
              <div className="flex flex-col gap-3 sm:gap-4 w-full justify-center px-2 sm:px-4 max-w-full">
